@@ -14,6 +14,19 @@ const TasbihCounter = () => {
   const [vibrate, setVibrate] = useState(true);
   const [sound, setSound] = useState(true);
 
+  // Create audio elements
+  const clickSound = new Audio('https://www.soundjay.com/button/button-09a.mp3');
+  const completeSound = new Audio('https://www.soundjay.com/button/button-10.mp3');
+  const resetSound = new Audio('https://www.soundjay.com/button/button-50.mp3');
+
+  // Function to play sound
+  const playSound = (audio: HTMLAudioElement) => {
+    if (sound) {
+      audio.currentTime = 0; // Reset to start
+      audio.play().catch(err => console.log('Error playing sound:', err));
+    }
+  };
+
   const dhikrList: Dhikr[] = [
     {
       id: 1,
@@ -50,18 +63,21 @@ const TasbihCounter = () => {
       const newCount = prev + 1;
       
       // Vibration feedback
-      if (vibrate && window.navigator.vibrate) {
+      if (vibrate && 'vibrate' in navigator) {
         if (newCount === dhikrList[selectedDhikr].target) {
-          window.navigator.vibrate([200]); // Longer vibration for target completion
+          navigator.vibrate([200, 100, 200]); // Special vibration pattern for target completion
+          playSound(completeSound);
         } else {
-          window.navigator.vibrate([50]); // Short vibration for each count
+          navigator.vibrate(80); // Short vibration for normal count
+          playSound(clickSound);
         }
-      }
-
-      // Sound feedback
-      if (sound) {
-        const audio = new Audio('/click.mp3');
-        audio.play().catch(() => {});
+      } else {
+        // If vibration is off, still play sounds
+        if (newCount === dhikrList[selectedDhikr].target) {
+          playSound(completeSound);
+        } else {
+          playSound(clickSound);
+        }
       }
 
       return newCount;
@@ -70,6 +86,10 @@ const TasbihCounter = () => {
 
   const resetCount = () => {
     setCount(0);
+    if (vibrate && 'vibrate' in navigator) {
+      navigator.vibrate([100, 50, 100]); // Double vibration for reset
+    }
+    playSound(resetSound);
   };
 
   return (
