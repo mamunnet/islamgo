@@ -1,0 +1,32 @@
+{
+  "name": "Islamic App",
+  "short_name": "Islamic App",
+  "description": "Prayer Times, Quran, and Qibla Direction",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0fdf4",
+  "theme_color": "#166534",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Prayer Times",
+      "url": "/#prayer",
+      "icons": [{ "src": "/vite.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Read Quran",
+      "url": "/#quran",
+      "icons": [{ "src": "/vite.svg", "sizes": "96x96" }]
+    }
+  ],
+  "categories": ["islamic", "religion", "lifestyle"],
+  "prefer_related_applications": false
+}

@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-color-primary-dark to-color-secondary-dark;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white bg-opacity-10 backdrop-blur-lg rounded-lg border border-white border-opacity-20 transition-all duration-200;
+  }
+
+  .glass-card:hover {
+    @apply bg-white bg-opacity-15 transform -translate-y-0.5;
+  }
+
+  .btn-primary {
+    @apply bg-color-primary text-white px-4 py-2 rounded-lg hover:bg-color-primary-light transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-color-secondary text-white px-4 py-2 rounded-lg hover:bg-color-secondary-light transition-colors;
+  }
+
+  .nav-item {
+    @apply flex flex-col items-center py-2 px-3 text-white rounded-lg transition-all duration-200;
+  }
+
+  .nav-item.active {
+    @apply bg-color-primary;
+  }
+
+  .nav-item:hover {
+    @apply bg-white bg-opacity-10;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

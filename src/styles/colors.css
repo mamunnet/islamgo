@@ -1,0 +1,66 @@
+:root {
+  /* Primary Colors */
+  --color-primary: #4e5ba1;
+  --color-primary-light: #7484f6;
+  --color-primary-dark: #24379c;
+  
+  /* Secondary Colors */
+  --color-secondary: #1E2875;
+  --color-secondary-light: #c8cde3;
+  --color-secondary-dark: #2c3875;
+
+  /* Background Colors */
+  --bg-primary: var(--color-primary-dark);
+  --bg-secondary: var(--color-secondary);
+  --bg-gradient: linear-gradient(135deg, var(--color-primary-dark), var(--color-secondary-dark));
+  
+  /* Text Colors */
+  --text-primary: #333333;
+  --text-secondary: rgba(255, 255, 255, 0.85);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  
+  /* Card Colors */
+  --card-bg: rgba(255, 255, 255, 0.1);
+  --card-bg-hover: rgba(255, 255, 255, 0.15);
+  --card-border: rgba(255, 255, 255, 0.2);
+  
+  /* Button Colors */
+  --btn-primary: var(--color-primary);
+  --btn-primary-hover: var(--color-primary-light);
+  --btn-secondary: var(--color-secondary);
+  --btn-secondary-hover: var(--color-secondary-light);
+  
+  /* Background Color */
+  --color-background: #FFFFFF;
+  
+  /* Border Color */
+  --color-border: #E5E7EB;
+  
+  /* Gray Colors */
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+}
+
+.text-color-primary {
+  color: var(--color-primary);
+}
+
+.bg-color-primary {
+  background-color: var(--color-primary);
+}
+
+.from-color-primary {
+  --tw-gradient-from: var(--color-primary);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(78, 91, 161, 0));
+}
+
+.to-color-secondary {
+  --tw-gradient-to: var(--color-secondary);
+}
