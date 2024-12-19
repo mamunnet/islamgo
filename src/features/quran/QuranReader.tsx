@@ -335,9 +335,9 @@ const QuranReader = () => {
                   </span>
                   <button
                     onClick={() => handleAudioPlay(verse)}
-                    className="text-gray-500 hover:text-[#4E5BA1] transition-colors"
+                    className="text-red-500 hover:text-red-600 transition-colors"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       {currentVerse === verse.number && isPlaying ? (
                         <>
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
