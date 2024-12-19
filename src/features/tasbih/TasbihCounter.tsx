@@ -15,15 +15,32 @@ const TasbihCounter = () => {
   const [sound, setSound] = useState(true);
   const [hasVibrationSupport, setHasVibrationSupport] = useState(false);
 
-  useEffect(() => {
-    // Check for vibration support when component mounts
-    if ('vibrate' in navigator) {
-      setHasVibrationSupport(true);
-      // Try to get vibration permission on iOS
-      if (typeof navigator.vibrate === 'function') {
-        navigator.vibrate(0);
+  // Function to handle vibration
+  const vibrateDevice = (pattern: number | number[]) => {
+    if (vibrate && hasVibrationSupport) {
+      try {
+        // For Android Chrome, we need to ensure the pattern is an array
+        const vibrationPattern = Array.isArray(pattern) ? pattern : [pattern];
+        window.navigator.vibrate(vibrationPattern);
+      } catch (error) {
+        console.log('Vibration error:', error);
       }
     }
+  };
+
+  useEffect(() => {
+    // Check for vibration support when component mounts
+    const checkVibrationSupport = () => {
+      if (typeof window !== 'undefined' && 
+          window.navigator && 
+          window.navigator.vibrate) {
+        setHasVibrationSupport(true);
+        // Test vibration with minimal duration
+        window.navigator.vibrate(1);
+      }
+    };
+
+    checkVibrationSupport();
   }, []);
 
   // Create audio elements
@@ -74,32 +91,12 @@ const TasbihCounter = () => {
     setCount(prev => {
       const newCount = prev + 1;
       
-      // Vibration feedback
-      if (vibrate && hasVibrationSupport) {
-        try {
-          if (newCount === dhikrList[selectedDhikr].target) {
-            navigator.vibrate([200, 100, 200]); // Special vibration pattern for target completion
-            playSound(completeSound);
-          } else {
-            navigator.vibrate(50); // Shorter vibration for better mobile response
-            playSound(clickSound);
-          }
-        } catch (error) {
-          console.log('Vibration error:', error);
-          // Still play sound if vibration fails
-          if (newCount === dhikrList[selectedDhikr].target) {
-            playSound(completeSound);
-          } else {
-            playSound(clickSound);
-          }
-        }
+      if (newCount === dhikrList[selectedDhikr].target) {
+        vibrateDevice([100, 50, 100]); // Pattern for completion
+        playSound(completeSound);
       } else {
-        // If vibration is off or not supported, still play sounds
-        if (newCount === dhikrList[selectedDhikr].target) {
-          playSound(completeSound);
-        } else {
-          playSound(clickSound);
-        }
+        vibrateDevice(30); // Short vibration for normal count
+        playSound(clickSound);
       }
 
       return newCount;
@@ -108,13 +105,7 @@ const TasbihCounter = () => {
 
   const resetCount = () => {
     setCount(0);
-    if (vibrate && hasVibrationSupport) {
-      try {
-        navigator.vibrate([100, 50, 100]); // Double vibration for reset
-      } catch (error) {
-        console.log('Vibration error:', error);
-      }
-    }
+    vibrateDevice([50, 25, 50]); // Pattern for reset
     playSound(resetSound);
   };
 
