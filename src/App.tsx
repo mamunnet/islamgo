@@ -13,6 +13,7 @@ import HadithReader from './features/hadith/HadithReader';
 import TasbihCounter from './features/tasbih/TasbihCounter';
 import IslamicCalendar from './features/calendar/IslamicCalendar';
 import QiblaFinder from './features/qibla/QiblaFinder';
+import InstallPrompt from './components/InstallPrompt';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,6 +66,7 @@ function PrayerPage() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <InstallPrompt />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
