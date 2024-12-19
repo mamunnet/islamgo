@@ -28,15 +28,15 @@ function HomePage() {
   return (
     <div className="space-y-6">
       <section>
+        <DailyVerse />
+      </section>
+      
+      <section>
         <PrayerTimes />
       </section>
       
       <section>
         <IslamicFeatures />
-      </section>
-      
-      <section>
-        <DailyVerse />
       </section>
     </div>
   );
