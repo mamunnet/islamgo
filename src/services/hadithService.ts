@@ -17,7 +17,13 @@ export const BOOK_SLUGS = {
 };
 
 // Book information with hadith counts and Bengali titles
-const BOOK_INFO = {
+export interface BookInfo {
+  name: string;
+  nameBn: string;
+  hadithCount: number;
+}
+
+export const BOOK_INFO: { [key: string]: BookInfo } = {
   'sahih-bukhari': {
     name: 'Sahih Bukhari',
     nameBn: 'সহীহ বুখারী',

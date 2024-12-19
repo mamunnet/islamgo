@@ -17,6 +17,7 @@ interface LocationType {
   longitude: number;
   city: string;
   country: string;
+  timestamp?: number;
 }
 
 const PrayerTimes = () => {
@@ -28,55 +29,73 @@ const PrayerTimes = () => {
   const [location, setLocation] = useState<LocationType | null>(null);
   const [locationError, setLocationError] = useState<string>('');
 
-  // Fetch user's location and convert to city/country
+  // Load cached location on mount
   useEffect(() => {
-    const getLocation = () => {
-      if (!navigator.geolocation) {
-        setLocationError('Geolocation is not supported by your browser');
+    const cachedLocation = localStorage.getItem('userLocation');
+    if (cachedLocation) {
+      const parsedLocation: LocationType = JSON.parse(cachedLocation);
+      // Check if cached location is less than 24 hours old
+      if (parsedLocation.timestamp && Date.now() - parsedLocation.timestamp < 24 * 60 * 60 * 1000) {
+        setLocation(parsedLocation);
         return;
       }
-
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          try {
-            // Get city and country from coordinates using reverse geocoding
-            const response = await axios.get(
-              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`
-            );
-
-            setLocation({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              city: response.data.city || response.data.locality || 'Unknown City',
-              country: response.data.countryName || 'Unknown Country'
-            });
-            setLocationError('');
-          } catch (error) {
-            console.error('Error getting location details:', error);
-            setLocationError('Error getting location details');
-          }
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-          setLocationError('Error getting your location. Using default location.');
-          // Set default location
-          setLocation({
-            latitude: 22.5726,
-            longitude: 88.3639,
-            city: 'Kolkata',
-            country: 'India'
-          });
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0
-        }
-      );
-    };
-
+    }
     getLocation();
   }, []);
+
+  // Fetch user's location and convert to city/country
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation is not supported by your browser');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          // Get city and country from coordinates using reverse geocoding
+          const response = await axios.get(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`
+          );
+
+          const newLocation: LocationType = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            city: response.data.city || response.data.locality || 'Unknown City',
+            country: response.data.countryName || 'Unknown Country',
+            timestamp: Date.now()
+          };
+
+          // Cache the location
+          localStorage.setItem('userLocation', JSON.stringify(newLocation));
+          setLocation(newLocation);
+          setLocationError('');
+        } catch (error) {
+          console.error('Error getting location details:', error);
+          setLocationError('Error getting location details');
+        }
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+        setLocationError('Error getting your location. Using default location.');
+        // Set default location
+        const defaultLocation: LocationType = {
+          latitude: 22.5726,
+          longitude: 88.3639,
+          city: 'Kolkata',
+          country: 'India',
+          timestamp: Date.now()
+        };
+        localStorage.setItem('userLocation', JSON.stringify(defaultLocation));
+        setLocation(defaultLocation);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      }
+    );
+  };
 
   // Fetch prayer times based on location
   useEffect(() => {

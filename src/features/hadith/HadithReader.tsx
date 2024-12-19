@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { 
   fetchHadiths, 
   fetchHadithBooks, 
   fetchBookChapters,
-  fetchBookCategories,
   HadithBook, 
   HadithChapter, 
   HadithResponse 
@@ -13,7 +12,6 @@ import {
 const HadithReader = () => {
   const [selectedBook, setSelectedBook] = useState('sahih-bukhari');
   const [selectedChapter, setSelectedChapter] = useState('1');
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -22,13 +20,6 @@ const HadithReader = () => {
     queryKey: ['hadithBooks'],
     queryFn: fetchHadithBooks,
     staleTime: Infinity // Books list won't change
-  });
-
-  // Fetch categories for selected book
-  const { data: categories = [], isLoading: isLoadingCategories } = useQuery({
-    queryKey: ['hadithCategories', selectedBook],
-    queryFn: () => fetchBookCategories(selectedBook),
-    enabled: !!selectedBook
   });
 
   // Fetch chapters for selected book
@@ -43,22 +34,15 @@ const HadithReader = () => {
           isLoading: isLoadingHadiths,
           error: hadithError
   } = useQuery({
-    queryKey: ['hadiths', selectedBook, selectedCategory || selectedChapter, currentPage],
-    queryFn: () => fetchHadiths(selectedBook, selectedCategory || selectedChapter, currentPage, 10),
-    enabled: !!selectedBook && !!(selectedCategory || selectedChapter)
+    queryKey: ['hadiths', selectedBook, selectedChapter, currentPage],
+    queryFn: () => fetchHadiths(selectedBook, selectedChapter, currentPage, 10),
+    enabled: !!selectedBook && !!selectedChapter
   });
 
-  // Reset page when book or chapter/category changes
+  // Reset page when book or chapter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedBook, selectedChapter, selectedCategory]);
-
-  // When category is selected, update chapter
-  useEffect(() => {
-    if (selectedCategory) {
-      setSelectedChapter(selectedCategory);
-    }
-  }, [selectedCategory]);
+  }, [selectedBook, selectedChapter]);
 
   const filteredHadiths = hadithData.hadiths.filter((hadith: HadithResponse) => {
     if (!searchQuery) return true;
@@ -73,7 +57,7 @@ const HadithReader = () => {
     );
   });
 
-  const isLoading = isLoadingBooks || isLoadingChapters || isLoadingHadiths || isLoadingCategories;
+  const isLoading = isLoadingBooks || isLoadingChapters || isLoadingHadiths;
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -103,7 +87,6 @@ const HadithReader = () => {
             onChange={(e) => {
               setSelectedBook(e.target.value);
               setSelectedChapter('1');
-              setSelectedCategory('');
             }}
             className="w-full p-2 rounded-lg bg-white/10 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 appearance-none"
           >
@@ -127,12 +110,9 @@ const HadithReader = () => {
               {chapters.map((chapter: HadithChapter) => (
                 <button
                   key={`chapter-${chapter.id}-${chapter.chapterId}`}
-                  onClick={() => {
-                    setSelectedChapter(chapter.chapterId);
-                    setSelectedCategory('');
-                  }}
+                  onClick={() => setSelectedChapter(chapter.chapterId)}
                   className={`px-4 py-2 rounded-full whitespace-nowrap transition-colors flex items-center gap-2 ${
-                    selectedChapter === chapter.chapterId && !selectedCategory
+                    selectedChapter === chapter.chapterId
                       ? 'bg-white text-[#4E5BA1]'
                       : 'bg-white/10 hover:bg-white/20 text-white'
                   }`}
