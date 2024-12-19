@@ -30,6 +30,7 @@ const QuranReader = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchBy, setSearchBy] = useState<'verse' | 'text'>('verse');
   const [verseNumber, setVerseNumber] = useState<string>('');
+  const [currentVerse, setCurrentVerse] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   // Bengali names for surahs
@@ -193,6 +194,44 @@ const QuranReader = () => {
     );
   });
 
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play().catch(error => {
+          console.error('Audio playback failed:', error);
+          setIsPlaying(false);
+        });
+      } else {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    }
+  }, [isPlaying, audioSrc]);
+
+  const handleAudioPlay = (verse: Verse) => {
+    if (currentVerse === verse.number && isPlaying) {
+      setIsPlaying(false);
+      setCurrentVerse(null);
+    } else {
+      // Calculate the global verse number
+      fetch(`https://api.alquran.cloud/v1/ayah/${selectedSurah}:${verse.number}/ar.alafasy`)
+        .then(res => res.json())
+        .then(data => {
+          const audioUrl = data.data.audio;
+          if (audioUrl) {
+            setAudioSrc(audioUrl);
+            setIsPlaying(true);
+            setCurrentVerse(verse.number);
+          }
+        })
+        .catch(error => {
+          console.error('Failed to fetch audio:', error);
+          setIsPlaying(false);
+          setCurrentVerse(null);
+        });
+    }
+  };
+
   return (
     <div className="quran-reader">
       {/* Header Section */}
@@ -295,15 +334,20 @@ const QuranReader = () => {
                     আয়াত {verse.number}
                   </span>
                   <button
-                    onClick={() => {
-                      setAudioSrc(verse.audio || '');
-                      setIsPlaying(true);
-                    }}
+                    onClick={() => handleAudioPlay(verse)}
                     className="text-gray-500 hover:text-[#4E5BA1] transition-colors"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      {currentVerse === verse.number && isPlaying ? (
+                        <>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </>
+                      ) : (
+                        <>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </>
+                      )}
                     </svg>
                   </button>
                 </div>
@@ -328,8 +372,10 @@ const QuranReader = () => {
       <audio
         ref={audioRef}
         src={audioSrc}
-        onEnded={() => setIsPlaying(false)}
-        autoPlay={isPlaying}
+        onEnded={() => {
+          setIsPlaying(false);
+          setCurrentVerse(null);
+        }}
       />
     </div>
   );
