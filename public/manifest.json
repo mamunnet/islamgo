@@ -1,7 +1,7 @@
 {
-  "name": "Islamic App",
-  "short_name": "Islamic App",
-  "description": "Prayer Times, Quran, and Qibla Direction",
+  "name": "DeenPath",
+  "short_name": "DeenPath",
+  "description": "Your Complete Islamic Companion App with Quran, Hadith, Prayer Times, and more",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f0fdf4",
