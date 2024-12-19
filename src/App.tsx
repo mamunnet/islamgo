@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import PrayerTimes from './components/PrayerTimes';
 import QuranReader from './features/quran/QuranReader';
-import PrayerTracking from './features/prayer/PrayerTracking';
+import PrayerGuide from './features/prayer/PrayerGuide';
 import DailyVerse from './components/DailyVerse';
 import IslamicFeatures from './components/IslamicFeatures';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -56,7 +56,7 @@ function PrayerPage() {
         <PrayerTimes />
       </section>
       <section className="bg-white rounded-lg shadow-md overflow-hidden">
-        <PrayerTracking />
+        <PrayerGuide />
       </section>
     </div>
   );

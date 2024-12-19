@@ -36,8 +36,8 @@ const IslamicFeatures = () => {
     {
       title: 'নামাজ',
       icon: '🕌',
-      description: 'নামাজের সময়সূচি এবং নির্দেশনা',
-      to: '/prayer-guide',
+      description: 'নামাজের সময়সূচি এবং শিক্ষা',
+      to: '/prayer',
       color: 'bg-blue-600'
     },
     {
@@ -64,12 +64,21 @@ const IslamicFeatures = () => {
   ];
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold text-gray-800 mb-4">ইসলামি সেবাসমূহ</h2>
-      <div className="grid grid-cols-2 gap-4">
-        {features.map((feature) => (
-          <FeatureCard key={feature.title} {...feature} />
-        ))}
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      {/* Header */}
+      <div className="bg-[#4E5BA1] text-white p-3">
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold">ইসলামি সেবাসমূহ</h2>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-4">
+        <div className="grid grid-cols-2 gap-4">
+          {features.map((feature) => (
+            <FeatureCard key={feature.title} {...feature} />
+          ))}
+        </div>
       </div>
     </div>
   );
