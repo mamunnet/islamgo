@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useAudio } from '../context/AudioContext';
+import type { AudioState } from '../context/AudioContext';
 
 interface Surah {
   number: number;
@@ -10,11 +12,60 @@ interface Surah {
 }
 
 const QuranAudioPlayer = () => {
-  const [selectedSurah, setSelectedSurah] = useState<number>(1);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { audioState, setAudioState } = useAudio();
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+    };
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+
+    return () => {
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (audioState.isPlaying) {
+      audioRef.current?.play();
+    } else {
+      audioRef.current?.pause();
+    }
+  }, [audioState.isPlaying]);
+
+  useEffect(() => {
+    if (duration) {
+      // Handle duration changes
+      console.log('Duration:', duration);
+    }
+  }, [duration]);
+
+  useEffect(() => {
+    if (currentTime) {
+      // Handle current time changes
+      console.log('Current Time:', currentTime);
+    }
+  }, [currentTime]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      // Handle audio ref
+      console.log('Audio element loaded');
+    }
+  }, [audioRef]);
 
   // Complete Bengali names for surahs
   const bengaliSurahNames: { [key: number]: string } = {
@@ -146,34 +197,18 @@ const QuranAudioPlayer = () => {
   });
 
   const handlePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      setDuration(audioRef.current.duration);
-    }
+    setAudioState((prev: AudioState) => ({ ...prev, isPlaying: !prev.isPlaying }));
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const time = Number(e.target.value);
     if (audioRef.current) {
       audioRef.current.currentTime = time;
-      setCurrentTime(time);
     }
+  };
+
+  const handleSurahChange = (surahNumber: number) => {
+    setAudioState((prev: AudioState) => ({ ...prev, currentSurah: surahNumber }));
   };
 
   const formatTime = (time: number) => {
@@ -183,26 +218,10 @@ const QuranAudioPlayer = () => {
   };
 
   useEffect(() => {
-    // Update audio source when surah changes
-    if (audioRef.current) {
-      const surahUrl = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${selectedSurah}.mp3`;
-      if (isPlaying) {
-        // If currently playing, store the current playback state
-        const wasPlaying = true;
-        audioRef.current.src = surahUrl;
-        audioRef.current.load();
-        if (wasPlaying) {
-          audioRef.current.play().catch(error => {
-            console.error('Failed to play audio:', error);
-          });
-        }
-      } else {
-        audioRef.current.src = surahUrl;
-        audioRef.current.load();
-      }
-      setCurrentTime(0);
-    }
-  }, [selectedSurah]);
+    // Update audio URL when surah changes
+    const surahUrl = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${audioState.currentSurah}.mp3`;
+    setAudioState((prev: AudioState) => ({ ...prev, audioUrl: surahUrl }));
+  }, [audioState.currentSurah]);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 mb-6">
@@ -211,8 +230,8 @@ const QuranAudioPlayer = () => {
         
         {/* Surah Selection */}
         <select
-          value={selectedSurah}
-          onChange={(e) => setSelectedSurah(Number(e.target.value))}
+          value={audioState.currentSurah}
+          onChange={(e) => handleSurahChange(Number(e.target.value))}
           className="w-full p-2 rounded-lg bg-white text-[#4E5BA1] border border-[#4E5BA1]/20 focus:outline-none focus:ring-2 focus:ring-[#4E5BA1]/30"
         >
           {surahs?.map((surah: Surah) => (
@@ -234,7 +253,7 @@ const QuranAudioPlayer = () => {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              {isPlaying ? (
+              {audioState.isPlaying ? (
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -265,7 +284,7 @@ const QuranAudioPlayer = () => {
             <input
               type="range"
               min={0}
-              max={duration || 0}
+              max={duration}
               value={currentTime}
               onChange={handleSeek}
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
@@ -276,14 +295,8 @@ const QuranAudioPlayer = () => {
             </div>
           </div>
         </div>
+        <audio ref={audioRef} src={audioState.audioUrl} />
       </div>
-
-      <audio
-        ref={audioRef}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onEnded={() => setIsPlaying(false)}
-      />
     </div>
   );
 };

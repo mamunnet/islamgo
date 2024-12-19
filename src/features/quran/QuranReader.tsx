@@ -208,6 +208,11 @@ const QuranReader = () => {
     }
   }, [isPlaying, audioSrc]);
 
+  useEffect(() => {
+    // Handle English translation visibility
+    console.log('English translation visibility:', showEnglish);
+  }, [showEnglish]);
+
   const handleAudioPlay = (verse: Verse) => {
     if (currentVerse === verse.number && isPlaying) {
       setIsPlaying(false);
@@ -232,6 +237,10 @@ const QuranReader = () => {
     }
   };
 
+  const handleLanguageToggle = () => {
+    setShowEnglish(!showEnglish);
+  };
+
   return (
     <div className="quran-reader">
       {/* Header Section */}
@@ -254,6 +263,14 @@ const QuranReader = () => {
               }`}
             >
               বাংলা
+            </button>
+            <button
+              onClick={handleLanguageToggle}
+              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                showEnglish ? 'bg-white text-[#4E5BA1]' : 'bg-white/20'
+              }`}
+            >
+              {showEnglish ? 'Hide English' : 'Show English'}
             </button>
           </div>
         </div>
@@ -361,6 +378,12 @@ const QuranReader = () => {
                 {showBengali && (
                   <p className="text-gray-600 leading-relaxed">
                     {verse.translation}
+                  </p>
+                )}
+
+                {showEnglish && (
+                  <p className="text-gray-600 leading-relaxed">
+                    English Translation
                   </p>
                 )}
               </div>

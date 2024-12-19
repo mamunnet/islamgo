@@ -267,9 +267,6 @@ export const fetchHadiths = async (
 
     return {
       hadiths: hadithsData.map((hadith: any) => {
-        // Get book info for Bengali translations
-        const bookInfo = bookSlug ? BOOK_INFO[bookSlug as keyof typeof BOOK_INFO] : null;
-        
         const mappedHadith = {
           id: hadith.id,
           bookSlug: bookSlug,
@@ -277,7 +274,7 @@ export const fetchHadiths = async (
           hadithNumber: hadith.hadithNumber,
           hadithUrl: hadith.hadithUrl,
           narrator: hadith.englishNarrator || '',
-          narratorBn: hadith.banglaNarrator || translateNarrator(hadith.englishNarrator) || '',
+          narratorBn: translateNarrator(hadith.englishNarrator) || '',
           body: hadith.hadithEnglish || '',
           bodyAr: hadith.hadithArabic || '',
           bodyBn: hadith.hadithBengali || translateHadith(hadith.hadithEnglish) || '',
@@ -301,28 +298,32 @@ export const fetchHadiths = async (
   }
 };
 
-// Helper function to translate narrator names to Bengali
-function translateNarrator(englishNarrator: string = ''): string {
-  const commonNarrators: { [key: string]: string } = {
-    "Abu Hurayrah": "আবু হুরায়রা (রাঃ)",
-    "Aisha": "আয়েশা (রাঃ)",
-    "Ibn Umar": "ইবনে উমর (রাঃ)",
-    "Anas bin Malik": "আনাস ইবনে মালিক (রাঃ)",
-    "Abdullah ibn Abbas": "আব্দুল্লাহ ইবনে আব্বাস (রাঃ)",
-    "Umar bin Al-Khattab": "উমর ইবনুল খাত্তাব (রাঃ)",
-    // Add more narrator translations as needed
-  };
+// Helper function to get book info
+export const getBookInfo = (bookSlug: string): BookInfo | null => {
+  return BOOK_INFO[bookSlug as keyof typeof BOOK_INFO] || null;
+};
 
-  if (!englishNarrator) return '';
-
-  // Try to find exact match
-  for (const [en, bn] of Object.entries(commonNarrators)) {
-    if (englishNarrator.includes(en)) {
-      return englishNarrator.replace(en, bn);
-    }
+// Helper function to get English translation
+export const getEnglishTranslation = async (hadithId: string): Promise<string> => {
+  try {
+    const response = await axios.get(`${API_BASE}/hadiths/${hadithId}/translations/en`, {
+      headers: { 'x-api-key': API_KEY }
+    });
+    return response.data.translation || '';
+  } catch (error) {
+    console.error('Error fetching English translation:', error);
+    return '';
   }
+};
 
-  return englishNarrator;
+// Helper function to translate narrator names to Bengali
+export function translateNarrator(englishNarrator: string = ''): string {
+  const narratorMap: { [key: string]: string } = {
+    'Abu Hurairah': 'আবু হুরায়রা',
+    'Aisha': 'আয়েশা',
+    // Add more mappings as needed
+  };
+  return narratorMap[englishNarrator] || englishNarrator;
 }
 
 // Helper function to translate hadith grades to Bengali
@@ -340,8 +341,8 @@ function translateGrade(grade: string = ''): string {
 }
 
 // Helper function to translate hadith text to Bengali
-// Note: This is a placeholder. In a real app, you would use a proper translation service
+// TODO: Implement proper translation service integration
 function translateHadith(englishText: string = ''): string {
-  // In a real app, you would call a translation API here
-  return ''; // Return empty string to fall back to English
+  // Return the original text until translation service is implemented
+  return englishText;
 }

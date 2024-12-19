@@ -16,6 +16,8 @@ import IslamicCalendar from './features/calendar/IslamicCalendar';
 import QiblaFinder from './features/qibla/QiblaFinder';
 import InstallPrompt from './components/InstallPrompt';
 import BackgroundAudio from './components/BackgroundAudio';
+import { AudioProvider } from './context/AudioContext';
+import PersistentAudioPlayer from './components/PersistentAudioPlayer';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -72,34 +74,37 @@ function PrayerPage() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BackgroundAudio />
-      <div className="min-h-screen bg-gray-50">
-        <InstallPrompt />
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="quran" element={<QuranPage />} />
-            <Route path="prayer" element={<PrayerPage />} />
-            <Route path="hadith" element={<HadithReader />} />
-            <Route path="tasbih" element={<TasbihCounter />} />
-            <Route path="calendar" element={<IslamicCalendar />} />
-            <Route path="qibla" element={<QiblaFinder />} />
-          </Route>
-        </Routes>
-        
-        <ToastContainer 
-          position="bottom-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-      </div>
+      <AudioProvider>
+        <PersistentAudioPlayer />
+        <BackgroundAudio />
+        <div className="min-h-screen bg-gray-50">
+          <InstallPrompt />
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="quran" element={<QuranPage />} />
+              <Route path="prayer" element={<PrayerPage />} />
+              <Route path="hadith" element={<HadithReader />} />
+              <Route path="tasbih" element={<TasbihCounter />} />
+              <Route path="calendar" element={<IslamicCalendar />} />
+              <Route path="qibla" element={<QiblaFinder />} />
+            </Route>
+          </Routes>
+          
+          <ToastContainer 
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+        </div>
+      </AudioProvider>
     </QueryClientProvider>
   );
 }
