@@ -320,7 +320,16 @@ export const getEnglishTranslation = async (hadithId: string): Promise<string> =
 export function translateNarrator(englishNarrator: string = ''): string {
   const narratorMap: { [key: string]: string } = {
     'Abu Hurairah': 'আবু হুরায়রা',
-    'Aisha': 'আয়েশা',
+    'Aisha': 'আয়িশা (রাঃ)',
+    'Abdullah ibn Umar': 'আবদুল্লাহ ইবনে উমর (রাঃ)',
+    'Anas ibn Malik': 'আনাস ইবনে মালিক (রাঃ)',
+    'Ibn Abbas': 'ইবনে আব্বাস (রাঃ)',
+    'Jabir': 'জাবির (রাঃ)',
+    'Abu Bakr': 'আবু বকর (রাঃ)',
+    'Umar ibn Al-Khattab': 'উমর ইবনুল খাত্তাব (রাঃ)',
+    'Ali ibn Abi Talib': 'আলী ইবনে আবি তালিব (রাঃ)',
+    'Abu Dhar': 'আবু যর (রাঃ)',
+    'Abu Musa Al-Ashari': 'আবু মূসা আল-আশআরী (রাঃ)',
     // Add more mappings as needed
   };
   return narratorMap[englishNarrator] || englishNarrator;
@@ -334,6 +343,13 @@ function translateGrade(grade: string = ''): string {
     "Da'if": 'দুর্বল',
     'Daif': 'দুর্বল',
     'Maudu': 'মাউদু',
+    'Authentic': 'সহীহ',
+    'Good': 'হাসান',
+    'Weak': 'দুর্বল',
+    'Fabricated': 'মাউদু',
+    'Hassan': 'হাসান',
+    'Sahih Bukhari': 'সহীহ বুখারী',
+    'Sahih Muslim': 'সহীহ মুসলিম',
     // Add more grade translations as needed
   };
 
@@ -341,8 +357,11 @@ function translateGrade(grade: string = ''): string {
 }
 
 // Helper function to translate hadith text to Bengali
-// TODO: Implement proper translation service integration
 function translateHadith(englishText: string = ''): string {
-  // Return the original text until translation service is implemented
+  // For now, return the original text
+  // In a production environment, you would want to:
+  // 1. Either use a pre-translated database
+  // 2. Or integrate with a translation service
+  // 3. Or maintain a mapping of common hadith translations
   return englishText;
 }

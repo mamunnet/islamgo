@@ -6,10 +6,24 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(var(--tw-gradient-stops))',
+      },
       fontFamily: {
         bengali: ['Noto Sans Bengali', 'system-ui', 'sans-serif'],
       },
       colors: {
+        'app': {
+          'primary': '#4E5BA1',
+          'secondary': '#1E2875',
+          'accent': {
+            'purple': '#7C3AED',
+            'indigo': '#4338CA',
+            'emerald': '#059669',
+            'amber': '#D97706'
+          }
+        },
         'islamic-green': {
           50: '#f0fdf4',
           100: '#dcfce7',

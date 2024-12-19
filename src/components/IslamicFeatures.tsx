@@ -31,49 +31,58 @@ const IslamicFeatures = () => {
       icon: '📚',
       description: 'বিশুদ্ধ হাদিস সংগ্রহ',
       to: '/hadith',
-      color: 'bg-emerald-600'
+      color: 'bg-white/10 hover:bg-white/20'
     },
     {
       title: 'নামাজ',
       icon: '🕌',
       description: 'নামাজের সময়সূচি এবং শিক্ষা',
       to: '/prayer',
-      color: 'bg-blue-600'
+      color: 'bg-white/10 hover:bg-white/20'
     },
     {
       title: 'তাসবিহ',
       icon: '📿',
       description: 'ডিজিটাল তাসবিহ কাউন্টার',
       to: '/tasbih',
-      color: 'bg-purple-600'
+      color: 'bg-white/10 hover:bg-white/20'
     },
     {
       title: 'ইসলামি ক্যালেন্ডার',
       icon: '📅',
       description: 'হিজরি ক্যালেন্ডার এবং ইসলামি দিবস',
       to: '/calendar',
-      color: 'bg-orange-600'
+      color: 'bg-white/10 hover:bg-white/20'
     },
     {
       title: 'কিবলা',
       icon: '🧭',
       description: 'কিবলা দিক নির্দেশনা',
       to: '/qibla',
-      color: 'bg-rose-600'
+      color: 'bg-white/10 hover:bg-white/20'
     }
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="relative rounded-lg shadow-md overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ 
+          backgroundImage: 'url("https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=1000&auto=format&fit=crop")',
+          filter: 'brightness(0.3)'
+        }}
+      />
+
       {/* Header */}
-      <div className="bg-[#4E5BA1] text-white p-3">
+      <div className="relative z-10 bg-black/30 backdrop-blur-sm text-white p-3">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold">ইসলামি সেবাসমূহ</h2>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="relative z-10 p-4 bg-black/30 backdrop-blur-sm">
         <div className="grid grid-cols-2 gap-4">
           {features.map((feature) => (
             <FeatureCard key={feature.title} {...feature} />

@@ -1,207 +1,273 @@
 import React, { useState } from 'react';
 import PrayerTracking from './PrayerTracking';
 
-interface PrayerStep {
+interface PrayerContent {
   id: number;
   title: string;
   description: string;
   imageUrl?: string;
   arabicText?: string;
   banglaText?: string;
+  audioUrl?: string;
 }
 
-interface PrayerLesson {
+interface PrayerCategory {
   id: number;
   title: string;
   description: string;
-  steps: PrayerStep[];
+  icon: string;
+  color: string;
+  content: PrayerContent[];
 }
 
-const prayerLessons: PrayerLesson[] = [
+const prayerCategories: PrayerCategory[] = [
   {
     id: 1,
-    title: 'নামাজের প্রস্তুতি',
-    description: 'নামাজ শুরু করার আগে প্রয়োজনীয় প্রস্তুতি',
-    steps: [
+    title: 'অযু শিক্ষা',
+    description: 'সঠিক নিয়মে অযু করার পদ্ধতি',
+    icon: '💧',
+    color: 'from-cyan-500 to-blue-500',
+    content: [
       {
         id: 1,
-        title: 'অযু করা',
-        description: 'সঠিক নিয়মে অযু করা',
-        imageUrl: '/images/wudu.png'
+        title: 'নিয়্যাত করা',
+        description: 'অযু শুরু করার আগে মনে মনে নিয়্যাত করা',
+        arabicText: 'نويت الوضوء لرفع الحدث الأصغر فرضا لله تعالى',
+        banglaText: 'নাওয়াইতুল ওযুয়া লিরাফইল হাদাছিল আসগারি ফারদাল্লিল্লাহি তাআলা',
+        imageUrl: '/images/wudu/niyyah.jpg'
       },
       {
         id: 2,
-        title: 'পবিত্র স্থান নির্বাচন',
-        description: 'পরিষ্কার জায়গা নির্বাচন করা এবং কিবলামুখী হওয়া'
-      }
+        title: 'হাত ধোয়া',
+        description: 'প্রথমে ডান হাত, তারপর বাম হাত কব্জি পর্যন্ত তিনবার ধোয়া',
+        imageUrl: '/images/wudu/hands.jpg'
+      },
     ]
   },
   {
     id: 2,
-    title: 'নামাজের রুকনসমূহ',
-    description: 'নামাজের মূল অংশগুলো',
-    steps: [
+    title: 'নামাজের নিয়ম',
+    description: 'নামাজ আদায়ের সঠিক পদ্ধতি',
+    icon: '🕌',
+    color: 'from-emerald-500 to-green-500',
+    content: [
       {
         id: 1,
         title: 'নিয়্যাত',
-        description: 'মনে মনে নামাজের নিয়্যাত করা',
+        description: 'নামাজ শুরু করার আগে মনে মনে নিয়্যাত করা',
         arabicText: 'نويت أن أصلي',
-        banglaText: 'নাওয়াইতু আন উসাল্লি'
+        banglaText: 'নাওয়াইতু আন উসাল্লি',
+        imageUrl: '/images/prayer/niyyah.jpg'
       },
+    ]
+  },
+  {
+    id: 3,
+    title: 'সূরা ও দোয়া',
+    description: 'নামাজে পড়ার সূরা ও দোয়াসমূহ',
+    icon: '📖',
+    color: 'from-amber-500 to-orange-500',
+    content: [
       {
-        id: 2,
-        title: 'তাকবীরে তাহরীমা',
-        description: 'দুই হাত কান পর্যন্ত উঠিয়ে আল্লাহু আকবার বলা',
-        arabicText: 'الله أكبر',
-        banglaText: 'আল্লাহু আকবার'
-      }
+        id: 1,
+        title: 'সূরা ফাতিহা',
+        description: 'প্রতি রাকাতে সূরা ফাতিহা পড়া ফরজ',
+        arabicText: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+        banglaText: 'বিসমিল্লাহির রাহমানির রাহীম',
+        audioUrl: '/audio/fatiha.mp3'
+      },
     ]
   }
 ];
 
 const PrayerGuide: React.FC = () => {
-  const [selectedLesson, setSelectedLesson] = useState<PrayerLesson | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<PrayerCategory | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [showArabic, setShowArabic] = useState(true);
+  const [showBengali, setShowBengali] = useState(true);
 
   return (
-    <div className="max-w-7xl mx-auto p-4 space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       {/* Prayer Times and Tracking Section */}
-      <div className="mb-8">
+      <div>
         <PrayerTracking />
       </div>
 
-      {/* Prayer Learning Section */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="bg-[#4E5BA1] text-white p-4">
-          <h2 className="text-xl font-semibold">নামাজ শিক্ষা</h2>
-          <p className="text-sm opacity-90">সহজ পদ্ধতিতে নামাজ শিখুন</p>
-        </div>
+      {/* Main Content Section */}
+      <div className="relative rounded-lg shadow-md overflow-hidden">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: 'url("https://images.unsplash.com/photo-1591604466107-ec97de577aff?q=80&w=1000&auto=format&fit=crop")',
+            filter: 'brightness(0.2)'
+          }}
+        />
 
-        <div className="p-6">
-          {!selectedLesson ? (
-            // Lesson Selection View
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {prayerLessons.map((lesson) => (
-                <div
-                  key={lesson.id}
-                  onClick={() => setSelectedLesson(lesson)}
-                  className="bg-white border border-gray-200 rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow"
-                >
-                  <h3 className="text-lg font-semibold text-[#4E5BA1] mb-2">
-                    {lesson.title}
+        {/* Content */}
+        <div className="relative z-10 bg-black/30 backdrop-blur-sm">
+          {/* Header */}
+          <div className="p-4 border-b border-white/10">
+            <h2 className="text-xl font-semibold text-white">নামাজ শিক্ষা</h2>
+            <p className="text-sm text-white/80">সহজ পদ্ধতিতে নামাজ শিখুন</p>
+          </div>
+
+          {/* Language Toggle */}
+          <div className="flex justify-end gap-2 p-4">
+            <button
+              onClick={() => setShowArabic(!showArabic)}
+              className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                showArabic ? 'bg-[#F87B14] text-white' : 'bg-black/30 text-white'
+              }`}
+            >
+              عربي
+            </button>
+            <button
+              onClick={() => setShowBengali(!showBengali)}
+              className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                showBengali ? 'bg-[#F87B14] text-white' : 'bg-black/30 text-white'
+              }`}
+            >
+              বাংলা
+            </button>
+          </div>
+
+          <div className="p-4">
+            {!selectedCategory ? (
+              // Category Selection View
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {prayerCategories.map((category) => (
+                  <div
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`bg-gradient-to-br ${category.color} rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1`}
+                  >
+                    <div className="flex items-center gap-4 mb-4">
+                      <span className="text-3xl">{category.icon}</span>
+                      <div>
+                        <h3 className="text-xl font-bold text-white">
+                          {category.title}
+                        </h3>
+                        <p className="text-white/80 text-sm">
+                          {category.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              // Category Detail View
+              <div className="space-y-6">
+                {/* Navigation Header */}
+                <div className="flex justify-between items-center">
+                  <button
+                    onClick={() => {
+                      setSelectedCategory(null);
+                      setCurrentStep(0);
+                    }}
+                    className="text-[#F87B14] hover:text-[#F87B14]/80 transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    পেছনে যান
+                  </button>
+                  <div className="text-sm text-white/60">
+                    ধাপ {currentStep + 1}/{selectedCategory.content.length}
+                  </div>
+                </div>
+
+                {/* Step Content */}
+                <div className="bg-white/5 rounded-xl p-6 space-y-6">
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {selectedCategory.content[currentStep].title}
                   </h3>
-                  <p className="text-gray-600 text-sm">{lesson.description}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            // Lesson Detail View
-            <div className="space-y-6">
-              {/* Navigation Header */}
-              <div className="flex justify-between items-center">
-                <button
-                  onClick={() => {
-                    setSelectedLesson(null);
-                    setCurrentStep(0);
-                  }}
-                  className="text-[#4E5BA1] hover:underline flex items-center"
-                >
-                  ← পেছনে যান
-                </button>
-                <div className="text-sm text-gray-500">
-                  ধাপ {currentStep + 1}/{selectedLesson.steps.length}
-                </div>
-              </div>
-
-              {/* Step Content */}
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-xl font-semibold text-[#4E5BA1] mb-4">
-                  {selectedLesson.steps[currentStep].title}
-                </h3>
-                <p className="text-gray-700 mb-4">
-                  {selectedLesson.steps[currentStep].description}
-                </p>
-                
-                {selectedLesson.steps[currentStep].arabicText && (
-                  <div className="text-right mb-2">
-                    <p className="text-2xl text-[#4E5BA1] font-arabic">
-                      {selectedLesson.steps[currentStep].arabicText}
-                    </p>
-                  </div>
-                )}
-                
-                {selectedLesson.steps[currentStep].banglaText && (
-                  <p className="text-lg text-gray-800 mb-4">
-                    {selectedLesson.steps[currentStep].banglaText}
+                  <p className="text-lg text-white/90 leading-relaxed">
+                    {selectedCategory.content[currentStep].description}
                   </p>
-                )}
+                  
+                  {showArabic && selectedCategory.content[currentStep].arabicText && (
+                    <div className="text-right py-6 px-4 bg-white/5 rounded-lg">
+                      <p className="text-3xl text-white font-arabic leading-loose">
+                        {selectedCategory.content[currentStep].arabicText}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {showBengali && selectedCategory.content[currentStep].banglaText && (
+                    <div className="py-4 px-4 bg-white/5 rounded-lg">
+                      <p className="text-xl text-white/90">
+                        {selectedCategory.content[currentStep].banglaText}
+                      </p>
+                    </div>
+                  )}
 
-                {selectedLesson.steps[currentStep].imageUrl && (
-                  <div className="mt-4">
-                    <img
-                      src={selectedLesson.steps[currentStep].imageUrl}
-                      alt={selectedLesson.steps[currentStep].title}
-                      className="rounded-lg max-w-full h-auto"
-                    />
+                  {selectedCategory.content[currentStep].imageUrl && (
+                    <div className="mt-6 rounded-lg overflow-hidden">
+                      <img
+                        src={selectedCategory.content[currentStep].imageUrl}
+                        alt={selectedCategory.content[currentStep].title}
+                        className="rounded-lg max-w-full h-auto"
+                      />
+                    </div>
+                  )}
+
+                  {selectedCategory.content[currentStep].audioUrl && (
+                    <div className="mt-4 p-4 bg-white/5 rounded-lg">
+                      <audio
+                        controls
+                        className="w-full"
+                        src={selectedCategory.content[currentStep].audioUrl}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Navigation Buttons */}
+                <div className="flex justify-between items-center mt-8">
+                  <button
+                    onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                    disabled={currentStep === 0}
+                    className={`px-4 py-2 rounded ${
+                      currentStep === 0
+                        ? 'bg-white/10 text-white/40 cursor-not-allowed'
+                        : 'bg-white/20 text-white hover:bg-white/30'
+                    }`}
+                  >
+                    পূর্ববর্তী
+                  </button>
+                  
+                  {/* Progress Indicator */}
+                  <div className="flex gap-1">
+                    {selectedCategory.content.map((_, index) => (
+                      <div
+                        key={index}
+                        className={`w-2 h-2 rounded-full transition-colors ${
+                          index === currentStep
+                            ? 'bg-[#F87B14]'
+                            : 'bg-white/20'
+                        }`}
+                      />
+                    ))}
                   </div>
-                )}
-              </div>
 
-              {/* Navigation Buttons */}
-              <div className="flex justify-between mt-6">
-                <button
-                  onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-                  disabled={currentStep === 0}
-                  className={`px-4 py-2 rounded ${
-                    currentStep === 0
-                      ? 'bg-gray-200 cursor-not-allowed'
-                      : 'bg-[#4E5BA1] text-white hover:bg-[#3D4A90]'
-                  }`}
-                >
-                  পূর্ববর্তী
-                </button>
-                <button
-                  onClick={() =>
-                    setCurrentStep(Math.min(selectedLesson.steps.length - 1, currentStep + 1))
-                  }
-                  disabled={currentStep === selectedLesson.steps.length - 1}
-                  className={`px-4 py-2 rounded ${
-                    currentStep === selectedLesson.steps.length - 1
-                      ? 'bg-gray-200 cursor-not-allowed'
-                      : 'bg-[#4E5BA1] text-white hover:bg-[#3D4A90]'
-                  }`}
-                >
-                  পরবর্তী
-                </button>
+                  <button
+                    onClick={() =>
+                      setCurrentStep(Math.min(selectedCategory.content.length - 1, currentStep + 1))
+                    }
+                    disabled={currentStep === selectedCategory.content.length - 1}
+                    className={`px-4 py-2 rounded ${
+                      currentStep === selectedCategory.content.length - 1
+                        ? 'bg-white/10 text-white/40 cursor-not-allowed'
+                        : 'bg-white/20 text-white hover:bg-white/30'
+                    }`}
+                  >
+                    পরবর্তী
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Additional Resources Section */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="bg-[#4E5BA1] text-white p-4">
-          <h2 className="text-xl font-semibold">অতিরিক্ত সহায়তা</h2>
-        </div>
-        <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="border rounded-lg p-4">
-            <h3 className="font-semibold text-[#4E5BA1] mb-2">নামাজের ভিডিও</h3>
-            <p className="text-sm text-gray-600">
-              ভিডিও টিউটোরিয়াল দেখে নামাজ শিখুন
-            </p>
-          </div>
-          <div className="border rounded-lg p-4">
-            <h3 className="font-semibold text-[#4E5BA1] mb-2">প্রশ্নোত্তর</h3>
-            <p className="text-sm text-gray-600">
-              নামাজ সম্পর্কিত সাধারণ প্রশ্নের উত্তর
-            </p>
-          </div>
-          <div className="border rounded-lg p-4">
-            <h3 className="font-semibold text-[#4E5BA1] mb-2">ডাউনলোড</h3>
-            <p className="text-sm text-gray-600">
-              নামাজ শিক্ষার PDF ডাউনলোড করুন
-            </p>
+            )}
           </div>
         </div>
       </div>

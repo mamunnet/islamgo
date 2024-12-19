@@ -74,7 +74,7 @@ export default defineConfig({
       workbox: {
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/api\.islamicfinder\.org/,
+            urlPattern: /^https:\/\/(api\.islamicfinder\.org|cdn\.onesignal\.com)/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
@@ -84,7 +84,9 @@ export default defineConfig({
               }
             }
           }
-        ]
+        ],
+        skipWaiting: true,
+        clientsClaim: true
       }
     })
   ],

@@ -121,9 +121,18 @@ ${data.translation}
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="relative rounded-lg shadow-md overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ 
+          backgroundImage: 'url("https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=1000&auto=format&fit=crop")',
+          filter: 'brightness(0.3)'
+        }}
+      />
+
       {/* Header with Refresh Button */}
-      <div className="bg-color-primary text-white p-3">
+      <div className="relative z-10 bg-gradient-to-b from-black/40 to-black/60 backdrop-blur-sm text-white p-3">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold">আজকের আয়াত</h2>
           <div className="flex items-center space-x-2">
@@ -151,21 +160,21 @@ ${data.translation}
 
       {/* Verse Content */}
       {data && (
-        <div className="p-3 space-y-3">
+        <div className="relative z-10 p-6 space-y-4 bg-gradient-to-b from-black/30 via-black/40 to-black/50 backdrop-blur-sm">
           {/* Arabic Text */}
           <div className="text-right">
-            <p className="text-lg font-arabic text-gray-800 leading-relaxed">{data.text}</p>
+            <p className="text-3xl font-arabic text-white leading-relaxed mb-4 drop-shadow-lg">{data.text}</p>
           </div>
 
           {/* Bengali Translation */}
           <div>
-            <p className="text-sm text-gray-600 leading-relaxed">{data.translation}</p>
+            <p className="text-lg text-white/90 leading-relaxed tracking-wide">{data.translation}</p>
           </div>
 
           {/* Reference */}
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-color-primary font-medium">{data.bengaliChapter}</span>
-            <span className="text-gray-500">আয়াত {data.verse}</span>
+          <div className="flex items-center justify-between text-sm mt-4 pt-4 border-t border-white/10">
+            <span className="text-yellow-400 font-medium">{data.bengaliChapter}</span>
+            <span className="text-white/80">আয়াত {data.verse}</span>
           </div>
         </div>
       )}

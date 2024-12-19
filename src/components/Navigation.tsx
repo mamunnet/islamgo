@@ -12,13 +12,31 @@ import {
 
 const Navigation = () => {
   const navItems = [
-    { name: 'Home', path: '/', icon: HomeIcon, activeIcon: HomeIconSolid },
-    { name: 'Quran', path: '/quran', icon: BookOpenIcon, activeIcon: BookOpenIconSolid },
-    { name: 'Prayer', path: '/prayer', icon: ClockIcon, activeIcon: ClockIconSolid }
+    { 
+      name: 'হোম', 
+      path: '/', 
+      icon: HomeIcon, 
+      activeIcon: HomeIconSolid,
+      color: 'from-purple-500 to-indigo-500'
+    },
+    { 
+      name: 'কুরআন', 
+      path: '/quran', 
+      icon: BookOpenIcon, 
+      activeIcon: BookOpenIconSolid,
+      color: 'from-emerald-500 to-teal-500'
+    },
+    { 
+      name: 'নামাজ', 
+      path: '/prayer', 
+      icon: ClockIcon, 
+      activeIcon: ClockIconSolid,
+      color: 'from-amber-500 to-orange-500'
+    }
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white/25 backdrop-blur-lg border-t border-white/20 shadow-[0_-8px_15px_rgba(0,0,0,0.05)]">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-white/20 shadow-[0_-8px_15px_rgba(0,0,0,0.05)]">
       <div className="max-w-md mx-auto">
         <div className="grid grid-cols-3">
           {navItems.map((item) => {
@@ -29,24 +47,36 @@ const Navigation = () => {
               <NavLink
                 key={item.path}
                 to={item.path}
-                className={({ isActive }) =>
-                  `flex flex-col items-center py-3 transition-colors relative ${
-                    isActive 
-                      ? 'text-color-primary' 
-                      : 'text-gray-600 hover:text-color-primary hover:bg-white/10'
-                  }`
-                }
+                className={({ isActive }) => `
+                  flex flex-col items-center py-3 transition-all duration-300 relative
+                  ${isActive ? 'scale-110' : 'hover:scale-105'}
+                `}
               >
                 {({ isActive }) => (
                   <>
-                    {isActive ? (
-                      <ActiveIcon className="w-6 h-6" />
-                    ) : (
-                      <Icon className="w-6 h-6" />
-                    )}
-                    <span className="text-xs mt-1 font-medium">{item.name}</span>
+                    <div className={`
+                      p-2 rounded-xl transition-all duration-300
+                      ${isActive 
+                        ? `bg-gradient-to-r ${item.color} shadow-lg` 
+                        : 'bg-gray-100'}
+                    `}>
+                      {isActive ? (
+                        <ActiveIcon className="w-5 h-5 text-white" />
+                      ) : (
+                        <Icon className="w-5 h-5 text-gray-600" />
+                      )}
+                    </div>
+                    <span className={`
+                      text-xs mt-1 font-medium transition-colors duration-300
+                      ${isActive ? 'text-gray-800' : 'text-gray-600'}
+                    `}>
+                      {item.name}
+                    </span>
                     {isActive && (
-                      <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-color-primary rounded-b-full" />
+                      <span className={`
+                        absolute -top-px left-1/2 -translate-x-1/2 w-8 h-0.5
+                        bg-gradient-to-r ${item.color}
+                      `} />
                     )}
                   </>
                 )}

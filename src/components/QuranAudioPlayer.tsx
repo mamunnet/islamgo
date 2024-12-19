@@ -224,28 +224,43 @@ const QuranAudioPlayer = () => {
   }, [audioState.currentSurah]);
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-      <div className="flex flex-col space-y-4">
-        <h2 className="text-xl font-bold text-[#4E5BA1] mb-2">সম্পূর্ণ সূরা শুনুন</h2>
-        
+    <div className="relative rounded-lg shadow-md overflow-hidden mb-6">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ 
+          backgroundImage: 'url("https://images.unsplash.com/photo-1585036156171-384164a8c675?q=80&w=1000&auto=format&fit=crop")',
+          filter: 'brightness(0.3)'
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 p-6 bg-gradient-to-b from-black/40 to-black/60 backdrop-blur-sm">
+        <h2 className="text-xl font-bold text-white mb-4">সম্পূর্ণ সূরা শুনুন</h2>
         {/* Surah Selection */}
         <select
           value={audioState.currentSurah}
           onChange={(e) => handleSurahChange(Number(e.target.value))}
-          className="w-full p-2 rounded-lg bg-white text-[#4E5BA1] border border-[#4E5BA1]/20 focus:outline-none focus:ring-2 focus:ring-[#4E5BA1]/30"
+          className="w-full p-3 rounded-lg bg-black/30 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-[#F87B14]/30 mb-6 transition-all hover:bg-black/40"
+          style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
         >
           {surahs?.map((surah: Surah) => (
-            <option key={surah.number} value={surah.number}>
+            <option 
+              key={surah.number} 
+              value={surah.number} 
+              className="bg-gray-900 text-white hover:bg-gray-800"
+              style={{ backgroundColor: '#1a1a1a', color: 'white', padding: '8px' }}
+            >
               {`${surah.number}. ${bengaliSurahNames[surah.number] || surah.englishName}`}
             </option>
           ))}
         </select>
 
         {/* Audio Controls */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 bg-black/30 rounded-xl p-4 border border-white/10">
           <button
             onClick={handlePlayPause}
-            className="text-red-500 hover:text-red-600 transition-colors"
+            className="text-white hover:text-[#F87B14] transition-all transform hover:scale-110"
           >
             <svg
               className="w-10 h-10"
@@ -287,16 +302,16 @@ const QuranAudioPlayer = () => {
               max={duration}
               value={currentTime}
               onChange={handleSeek}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer"
             />
-            <div className="flex justify-between text-sm text-gray-500">
+            <div className="flex justify-between text-sm text-white/80">
               <span>{formatTime(currentTime)}</span>
               <span>{formatTime(duration)}</span>
             </div>
           </div>
         </div>
         <audio ref={audioRef} src={audioState.audioUrl} />
-      </div>
+    </div>
     </div>
   );
 };

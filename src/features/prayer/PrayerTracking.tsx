@@ -78,14 +78,23 @@ const PrayerTracking = () => {
   const stats = calculateStats();
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="relative rounded-lg shadow-md overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ 
+          backgroundImage: 'url("https://images.unsplash.com/photo-1542816417-0983c9c9ad53?q=80&w=1000&auto=format&fit=crop")',
+          filter: 'brightness(0.3)'
+        }}
+      />
+
       {/* Header */}
-      <div className="bg-[#4E5BA1] text-white p-3">
+      <div className="relative z-10 bg-black/30 backdrop-blur-sm text-white p-4">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold">নামাজ ট্র্যাকিং</h2>
           <input
             type="date"
-            className="px-2 py-1 text-sm bg-white/10 border border-white/20 rounded text-white"
+            className="px-3 py-1.5 text-sm bg-black/30 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500/30"
             value={format(selectedDate, 'yyyy-MM-dd')}
             onChange={(e) => setSelectedDate(new Date(e.target.value))}
           />
@@ -93,34 +102,34 @@ const PrayerTracking = () => {
       </div>
 
       {/* Progress Bar */}
-      <div className="p-4 border-b">
+      <div className="relative z-10 p-4 bg-black/30 backdrop-blur-sm border-b border-white/10">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-gray-600">আজকের অগ্রগতি</span>
-          <span className="text-sm font-medium text-[#4E5BA1]">
+          <span className="text-sm text-white/80">আজকের অগ্রগতি</span>
+          <span className="text-sm font-medium text-yellow-400">
             {stats.completed}/{stats.total} নামাজ
           </span>
         </div>
-        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="w-full h-2.5 bg-black/30 rounded-full overflow-hidden">
           <div
-            className="h-full bg-[#4E5BA1] transition-all duration-300"
+            className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-300"
             style={{ width: `${stats.percentage}%` }}
           />
         </div>
       </div>
 
       {/* Prayer List */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 p-3">
+      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 p-4 bg-black/30 backdrop-blur-sm">
         {prayers[dateStr]?.map((prayer) => (
           <div
             key={prayer.name}
             className={`rounded-lg p-3 transition-all duration-300 ${
               prayer.completed
-                ? 'bg-[#4E5BA1]/10 border-[#4E5BA1]/20'
-                : 'bg-gray-50 border-gray-100'
-            } border`}
+                ? 'bg-white/10 border-white/20'
+                : 'bg-black/30 border-white/10'
+            } border hover:bg-white/5`}
           >
             <div className="flex items-center justify-between mb-1">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-white">
                 {prayer.banglaName}
               </span>
               <label className="relative inline-flex items-center cursor-pointer">
@@ -134,15 +143,15 @@ const PrayerTracking = () => {
               </label>
             </div>
             {prayer.time && (
-              <span className="text-xs text-gray-500">সময়: {prayer.time}</span>
+              <span className="text-xs text-white/60">সময়: {prayer.time}</span>
             )}
           </div>
         ))}
       </div>
 
       {/* Weekly Stats */}
-      <div className="border-t bg-gray-50/50 p-3">
-        <div className="flex justify-between items-center text-xs text-gray-600">
+      <div className="relative z-10 border-t border-white/10 bg-black/30 backdrop-blur-sm p-4">
+        <div className="flex justify-between items-center text-xs text-white/60">
           <span>সাপ্তাহিক লক্ষ্য: ৩৫/৩৫</span>
           <span>মাসিক লক্ষ্য: ১৪০/১৫০</span>
         </div>

@@ -31,21 +31,33 @@ const queryClient = new QueryClient({
 
 function HomePage() {
   return (
-    <div className="space-y-6">
+    <div className="relative">
+      <section>
+        <PrayerTimes />
+      </section>
+
+      {/* Glowing Divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent my-0.5 blur-sm" />
+      <div className="h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent my-0.5" />
+
+      <section>
+        <IslamicFeatures />
+      </section>
+
+      {/* Glowing Divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent my-0.5 blur-sm" />
+      <div className="h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent my-0.5" />
+
       <section>
         <QuranAudioPlayer />
       </section>
 
+      {/* Glowing Divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent my-0.5 blur-sm" />
+      <div className="h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent my-0.5" />
+
       <section>
         <DailyVerse />
-      </section>
-      
-      <section>
-        <PrayerTimes />
-      </section>
-      
-      <section>
-        <IslamicFeatures />
       </section>
     </div>
   );
@@ -62,12 +74,7 @@ function QuranPage() {
 function PrayerPage() {
   return (
     <div className="space-y-6">
-      <section className="bg-white rounded-lg shadow-md overflow-hidden">
-        <PrayerTimes />
-      </section>
-      <section className="bg-white rounded-lg shadow-md overflow-hidden">
-        <PrayerGuide />
-      </section>
+      <PrayerGuide />
     </div>
   );
 }
