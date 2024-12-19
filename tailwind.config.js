@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        bengali: ['Noto Sans Bengali', 'system-ui', 'sans-serif'],
+      },
       colors: {
         'islamic-green': {
           50: '#f0fdf4',

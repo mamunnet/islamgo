@@ -1,5 +1,8 @@
 @import './colors.css';
 
+/* Import Bengali fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap');
+
 /* Base Styles */
 :root {
   --islamic-green-50: #f0fdf4;

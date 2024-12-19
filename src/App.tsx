@@ -18,6 +18,7 @@ import InstallPrompt from './components/InstallPrompt';
 import BackgroundAudio from './components/BackgroundAudio';
 import { AudioProvider } from './context/AudioContext';
 import PersistentAudioPlayer from './components/PersistentAudioPlayer';
+import PopupBanner from './components/PopupBanner';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -75,9 +76,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AudioProvider>
-        <PersistentAudioPlayer />
-        <BackgroundAudio />
-        <div className="min-h-screen bg-gray-50">
+        <div className="app">
           <InstallPrompt />
           <Routes>
             <Route path="/" element={<Layout />}>
@@ -90,7 +89,6 @@ function App() {
               <Route path="qibla" element={<QiblaFinder />} />
             </Route>
           </Routes>
-          
           <ToastContainer 
             position="bottom-right"
             autoClose={3000}
@@ -103,6 +101,8 @@ function App() {
             pauseOnHover
             theme="light"
           />
+          <BackgroundAudio />
+          <PopupBanner />
         </div>
       </AudioProvider>
     </QueryClientProvider>
